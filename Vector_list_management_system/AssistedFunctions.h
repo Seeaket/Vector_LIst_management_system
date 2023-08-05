@@ -1,6 +1,6 @@
 #pragma once
 #include"ListNode.h"
-#include<vector>
+#include<list>
 
 
 void Menu();
@@ -17,11 +17,11 @@ int Judge();
 
 int InputTranslation();
 
-struct ListNode* AddMessage(std::vector<ListMessage*>memory);
+void AddMessage(std::list<ListMessage>& memory);
 
 void Dealy(int num);
 
-void SaveMessage(std::vector<ListMessage*>memory);
+void SaveMessage(std::list<ListMessage>& memory);
 
 int DeleteMessage();
 

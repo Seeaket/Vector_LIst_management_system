@@ -24,10 +24,10 @@
     <ClCompile Include="AssistedFunctions.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="SortFunction.cpp">
+    <ClCompile Include="FindFunction.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="FindFunction.cpp">
+    <ClCompile Include="SortFunction.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -41,10 +41,10 @@
     <ClInclude Include="ListNode.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="SortFunction.h">
+    <ClInclude Include="FindFunction.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="FindFunction.h">
+    <ClInclude Include="SortFunction.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

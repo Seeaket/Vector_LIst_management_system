@@ -1,6 +1,6 @@
 #pragma once
 #include<iostream>
-
+#include<list>
 
 struct ListMessage
 {
@@ -9,8 +9,5 @@ struct ListMessage
 	float wages;
 };
 
-struct ListNode
-{
-	ListMessage data;
-	ListNode* next;
-};
+extern ListMessage message;
+

@@ -1,22 +1,20 @@
-#include<vector>
+#include"SortFunction.h"
 #include"ListNode.h"
-#include "SortFunction.h"
 
-constexpr double EPS = 1e-6;
+const float EPS = 1e-6f;//不加f这个数值函数默认为double类型
 
-int NameSearch(std::vector<ListMessage*>memory,int i ,int j)
+bool NameSort(const ListMessage& a, const ListMessage& b)
 {
-	return memory.at(i)->name > memory.at(j)->name;
+	return a.name < b.name;
 }
 
-int IdSearch(std::vector<ListMessage*> memory, int i, int j)
+bool IdSort(const ListMessage& a, const ListMessage& b)
 {
-	return memory.at(i)->id > memory.at(j)->id;
+	return a.id < b.id;
 }
 
-int wagesSearch(std::vector<ListMessage*> memory, int i, int j)
+bool WageSort(const ListMessage& a, const ListMessage& b)
 {
-	return memory.at(i)->wages > (memory.at(j)->wages + EPS);
+	/*return (a.wages - b.wages) < EPS;*///在list的sort函数中对浮点型进行排序不需要加精度判断，函数会奔溃
+	return a.wages < b.wages;
 }
-
-

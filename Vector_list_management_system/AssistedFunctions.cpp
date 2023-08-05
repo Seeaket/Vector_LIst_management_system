@@ -5,12 +5,13 @@
 #include"ListNode.h"
 #include<chrono>
 #include<thread>
-#include<vector>
+#include<list>
+
 
 void Menu()
 {
 	std::cout << Blank(5) << ">---------------------------<" << std::endl;
-	std::cout << Blank(5) << "     Vector-List-System" << std::endl;
+	std::cout << Blank(5) << "     list-List-System" << std::endl;
 	std::cout << Blank(6) << "1、浏览信息" << std::endl;
 	std::cout << Blank(6) << "2、添加信息" << std::endl;
 	std::cout << Blank(6) << "3、删除信息" << std::endl;
@@ -25,7 +26,7 @@ void AddMenu()
 {
 	system("cls");
 	std::cout << Blank(5) << ">---------------------------<" << std::endl;
-	std::cout << Blank(5) << "     Vector-List-System" << std::endl;
+	std::cout << Blank(5) << "     list-List-System" << std::endl;
 	std::cout << Blank(6) << "1、首部添加" << std::endl;
 	std::cout << Blank(6) << "2、尾部添加" << std::endl;
 	std::cout << Blank(6) << "3、返回菜单" << std::endl;
@@ -36,7 +37,7 @@ void FindMenu()
 {
 	system("cls");
 	std::cout << Blank(5) << ">---------------------------<" << std::endl;
-	std::cout << Blank(5) << "  Vector-List-System-Search" << std::endl;
+	std::cout << Blank(5) << "  list-List-System-Search" << std::endl;
 	std::cout << Blank(6) << "1、姓名查找" << std::endl;
 	std::cout << Blank(6) << "2、编号查找" << std::endl;
 	std::cout << Blank(6) << "3、工资段查找" << std::endl;
@@ -49,7 +50,7 @@ void SortMenu()
 {
 	system("cls");
 	std::cout << Blank(5) << ">---------------------------<" << std::endl;
-	std::cout << Blank(5) << "   Vector-List-System-Sort" << std::endl;
+	std::cout << Blank(5) << "   list-List-System-Sort" << std::endl;
 	std::cout << Blank(6) << "1、姓名排序" << std::endl;
 	std::cout << Blank(6) << "2、编号排序" << std::endl;
 	std::cout << Blank(6) << "3、工资排序" << std::endl;
@@ -81,11 +82,9 @@ int InputTranslation()
 	return atoi(c);
 }
 
-ListNode* AddMessage(std::vector<ListMessage*>memory)
+void AddMessage(std::list<ListMessage>&memory)
 {
 	std::cout << Blank(4) << "   >-----------根据提示录入信息-----------<" << std::endl;
-	ListNode* tist = new ListNode;
-	tist->next = nullptr;
 	std::cout << std::endl << Blank(6) << "姓名:";
 	std::string name;
 	std::cin >> name;
@@ -94,9 +93,9 @@ ListNode* AddMessage(std::vector<ListMessage*>memory)
 	std::cin >> id;
 	while(num--)
 	{
-		for (auto& message : memory)
+		for (auto& messages : memory)
 		{
-			if (message->id == id)
+			if (messages.id == id)
 			{
 				num++;
 				std::cout << Blank(6) << "    编号重复!";
@@ -109,8 +108,7 @@ ListNode* AddMessage(std::vector<ListMessage*>memory)
 	std::cout << std::endl << Blank(6) << "工资:";
 	float wage;
 	std::cin >> wage;
-	tist->data.name = name, tist->data.id = id, tist->data.wages = wage;
-	return tist;
+	message.name = name, message.id = id, message.wages = wage;
 }
 
 void Dealy(int num)
@@ -127,7 +125,7 @@ void Dealy(int num)
 	std::cout << std::endl;
 }
 
-void SaveMessage(std::vector<ListMessage*> memory)
+void SaveMessage(std::list<ListMessage>& memory)
 {
 	Dealy(800);
 	SaveFile(memory);

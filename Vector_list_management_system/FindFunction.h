@@ -2,13 +2,13 @@
 #include"ListNode.h"
 
 
-int NameFind(ListMessage* data, std::string names);
+bool NameFind(ListMessage data, std::string names);
 
 
-int IdFind(ListMessage* data, int ids);
+bool IdFind(ListMessage data, int ids);
 
 
-int WagesFind(ListMessage* data, std::string wage);
+bool WagesFind(ListMessage data, std::string wage);
 
 
-int SimilarFind(ListMessage* data, std::string ccs);
+bool SimilarFind(ListMessage data, std::string ccs);

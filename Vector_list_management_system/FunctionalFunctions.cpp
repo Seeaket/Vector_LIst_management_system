@@ -1,69 +1,58 @@
 #include<iostream>
+#include<list>
 #include "FunctionalFunctions.h"
 #include"AssistedFunctions.h"
 #include"ListNode.h"
 #include<fstream>
-#include<vector>
 #include<iomanip>
-#include "SortFunction.h"
 #include "FindFunction.h"
+#include<algorithm>
+#include"SortFunction.h"
 
+ListMessage message;
 
-
-void SaveFile(std::vector<ListMessage*>memory)
+void SaveFile(std::list<ListMessage>& memory)
 {
 	std::ofstream openfile("DataList.csh");
 	if (openfile.is_open())
 	{
-		for (auto& message : memory)
+		for (auto& messages : memory)
 		{
-			openfile << message->name << std::endl << message->id << std::endl << message->wages << std::endl;
+			openfile << messages.name << std::endl << messages.id << std::endl << messages.wages << std::endl;
 		}
 	}
 	openfile.close();
 }
 
 
-ListNode* LoadFile(std::vector<ListMessage*>&memory,ListNode*& list)
+void LoadFile(std::list<ListMessage>&memory)
 {
 	std::ifstream openfile("DataList.csh");
-	ListNode* temp = new ListNode;
-	list->next = temp;
-	ListNode* theLastTemp = temp;
 	if (openfile.is_open())
 	{
-		while (openfile >> temp->data.name >> temp->data.id >> temp->data.wages)
+		while (openfile >> message.name >> message.id >> message.wages)
 		{
-			memory.push_back(&temp->data);
-			temp->next = new ListNode;
-			theLastTemp = temp;
-			temp = temp->next;
+			memory.push_back(message);
 		}
 	}
-	theLastTemp->next = nullptr;
-	delete temp;
-	temp = nullptr;
-	if (memory.size() == 0)
-		list->next = nullptr;
 	openfile.close();
-	return list;
 }
 
 
-void View(std::vector<ListMessage*>&memory,ListNode* list)
+void View(std::list<ListMessage>&memory)
 {
 	std::cout << Blank(4) << "   >--------------------------------------<" << std::endl;
 	std::cout << Blank(4) << std::setw(20) << std::left << "    姓名" << std::setw(18) << "编号" << "工资" << std::endl;
-	for (auto& message : memory)
+	for (auto& messages : memory)
 	{
-		if (memory.size() < 20)
+		if (memory.size() < 7)
 			std::cout << std::endl;
-		std::cout << Blank(4) << "    "  << std::setw(16) << std::left << message->name << std::setw(18)
-			<< message->id << message->wages << std::endl;
+		std::cout << Blank(4) << "    "  << std::setw(16) << std::left << messages.name << std::setw(18)
+			<< messages.id << messages.wages << std::endl;
 	}
 }
 
-void AddPerson(std::vector<ListMessage*>&memory,ListNode*& list)
+void AddPerson(std::list<ListMessage>&memory)
 {
 	while (1)
 	{
@@ -71,33 +60,16 @@ void AddPerson(std::vector<ListMessage*>&memory,ListNode*& list)
 		int num = InputTranslation();
 		if (num >= 1 && num <= 2)
 		{
-			ListNode* sist = AddMessage(memory);
-			if (memory.size() == 0)
-			{
-				memory.push_back(&sist->data);
-				list->next = sist;
-				SaveMessage(memory);
-				return;
-			}
+			AddMessage(memory);
 			if (num == 1)
 			{
-				memory.insert(memory.begin(),&sist->data);
-				sist->next = list->next;
-				list->next = sist;
+				memory.push_front(message);
 				SaveMessage(memory);
-				system("pause");
 			}
 			else
 			{
-				memory.push_back(&sist->data);
-				ListNode* temp = list;
-				while (temp->next != nullptr)
-				{
-					temp = temp->next;
-				}
-				temp->next = sist;
+				memory.push_back(message);
 				SaveMessage(memory);
-				system("pause");
 			}
 		}
 		else if (num == 3)
@@ -108,13 +80,13 @@ void AddPerson(std::vector<ListMessage*>&memory,ListNode*& list)
 		else
 		{
 			std::cout << Blank(6) << "   无效输入!" << std::endl;
-			std::cout << std::endl << Blank(5) << "     ";
-			system("pause");
 		}
+		std::cout << std::endl << Blank(5) << "     ";
+		system("pause");
 	}
 }
 
-void Deletely(std::vector<ListMessage*>& memory, ListNode*& list)
+void Deletely(std::list<ListMessage>& memory)
 {
 	int id = DeleteMessage(),i = 0;
 	if (memory.size() == 0)
@@ -122,35 +94,30 @@ void Deletely(std::vector<ListMessage*>& memory, ListNode*& list)
 		std::cout << std::endl << Blank(6) << "暂无匹配数据!";
 		return;
 	}
-	ListNode* temp = list;
-	ListNode* sist = temp;
-	for (auto& message : memory)
+	auto it = memory.begin();
+	for (auto& messages : memory)
 	{
-		sist = temp;
-		temp = temp->next;
-		if (message->id == id)
+		if (messages.id == id)
 		{
-			std::cout << std::endl << Blank(4) << "    " << std::setw(16) << std::left << message->name << std::setw(18)
-				<< message->id << message->wages << std::endl;
+			std::cout << std::endl << Blank(4) << "    " << std::setw(16) << std::left << messages.name << std::setw(18)
+				<< messages.id << messages.wages << std::endl;
 			std::cout << std::endl << Blank(4) << "    是否删除匹配数据?\t\ty[Y]/n[N]" << std::endl << Blank(6) << "请选择:";
 			int num = Judge();
 			if (num == 1)
 			{
-				memory.erase(memory.begin() + i);
-				sist->next = temp->next;
-				delete temp;
+				memory.erase(it);
 				SaveMessage(memory);
 				return;
 			}
 			std::cout << std::endl << Blank(6) << (num == 0 ? "    已取消删除！" : "无效操作已取消删除！") << std::endl;
 			return;
 		}
-		i++;
+		it++;
 	}
 	std::cout << std::endl << Blank(6) << "暂无匹配数据!";
 }
 
-void Modify(std::vector<ListMessage*>& memory, ListNode*& list)
+void Modify(std::list<ListMessage>& memory)
 {
 	int id = DeleteMessage(), i = 0;
 	if (memory.size() == 0)
@@ -158,34 +125,32 @@ void Modify(std::vector<ListMessage*>& memory, ListNode*& list)
 		std::cout << std::endl << Blank(6) << "暂无匹配数据!";
 		return;
 	}
-	ListNode* temp = list;
-	for (auto& message : memory)
+	auto it = memory.begin();
+	for (auto& messages : memory)
 	{
-		temp = temp->next;
-		if (message->id == id)
+		if (messages.id == id)
 		{
-			std::cout << std::endl << Blank(4) << "    " << std::setw(16) << std::left << message->name << std::setw(18)
-				<< message->id << message->wages << std::endl;
+			std::cout << std::endl << Blank(4) << "    " << std::setw(16) << std::left << messages.name << std::setw(18)
+				<< messages.id << messages.wages << std::endl;
 			std::cout << std::endl << Blank(4) << "    是否修改匹配数据?\t\ty[Y]/n[N]" << std::endl << Blank(6) << "请选择:";
 			int num = Judge();
 			if (num == 1)
 			{
-				ListNode* sist = AddMessage(memory);
-				temp->data = sist->data;
-				memory.at(i) = &temp->data;
+				AddMessage(memory);
+				*it = message;
 				SaveMessage(memory);
 				return;
 			}
 			std::cout << std::endl << Blank(6) << (num == 0 ? "    已取消修改！" : "无效操作已取消修改！") << std::endl;
 			return;
 		}
-		i++;
+		it++;
 	}
 	std::cout << std::endl << Blank(6) << "暂无匹配数据!";
 }
 
 
-void FindFunction(std::vector<ListMessage*>& memory, ListNode*& list)
+void FindFunction(std::list<ListMessage>& memory)
 {
 	while (1)
 	{
@@ -210,40 +175,40 @@ void FindFunction(std::vector<ListMessage*>& memory, ListNode*& list)
 			}
 			else
 				std::cin >> s;
-			typedef int (*Find)(ListMessage* data,std::string s);
+			typedef int (*Find)(ListMessage data,std::string s);
 			Find IsFind[] = {(Find)NameFind,(Find)IdFind,(Find)WagesFind,(Find)SimilarFind};
 			std::cout << Blank(3) << "       >----------------------------------------------<" << std::endl;
 			std::cout << Blank(4) << std::setw(20) << std::left << "    姓名" << std::setw(18) << "编号" << "工资" << std::endl;
 			if (num == 2)
 			{
-				for (auto message : memory)
+				for (auto messages : memory)
 				{
-					if (IdFind(message,i))
+					if (IdFind(messages,i))
 					{
-						std::cout << std::endl << Blank(4) << "    " << std::setw(16) << std::left << message->name << std::setw(18)
-							<< message->id << message->wages << std::endl;
+						std::cout << std::endl << Blank(4) << "    " << std::setw(16) << std::left << messages.name
+							<< std::setw(18) << messages.id << messages.wages << std::endl;
 					}
 				}
 			}
 			if (num == 3)
 			{
-				for (auto message : memory)
+				for (auto messages : memory)
 				{
-					if (WagesFind(message, w))
+					if (WagesFind(messages, w))
 					{
-						std::cout << std::endl << Blank(4) << "    " << std::setw(16) << std::left << message->name << std::setw(18)
-							<< message->id << message->wages << std::endl;
+						std::cout << std::endl << Blank(4) << "    " << std::setw(16) << std::left << messages.name << std::setw(18)
+							<< messages.id << messages.wages << std::endl;
 					}
 				}
 			}
 			if(num == 1 || num == 4)
 			{
-				for (auto message : memory)
+				for (auto messages : memory)
 				{
-					if (IsFind[num - 1](message, s))
+					if (IsFind[num - 1](messages, s))
 					{
-						std::cout << std::endl << Blank(4) << "    " << std::setw(16) << std::left << message->name << std::setw(18)
-							<< message->id << message->wages << std::endl;
+						std::cout << std::endl << Blank(4) << "    " << std::setw(16) << std::left << messages.name << std::setw(18)
+							<< messages.id << messages.wages << std::endl;
 					}
 				}
 			}
@@ -264,30 +229,17 @@ void FindFunction(std::vector<ListMessage*>& memory, ListNode*& list)
 	}
 }
 
-void Sort(std::vector<ListMessage*>& memory, ListNode*& list)
+void Sort(std::list<ListMessage>& memory)
 {
-	typedef int(*Funcs)(std::vector<ListMessage*>memory, int i, int j);
-	Funcs funcs[] = {(Funcs)NameSearch,(Funcs)IdSearch,(Funcs)wagesSearch};
+	typedef int(*Funcs)(std::list<ListMessage>&memory);
 	while (1)
 	{
 		SortMenu();
 		int num = InputTranslation();
 		if (num >= 1 && num <= 3)
 		{
-			ListMessage* data = memory.at(0);
-			for (int i = 0; i < memory.size() - 1; i++)
-			{
-				for (int j = i + 1; j < memory.size(); j++)
-				{
-					if (funcs[num - 1](memory, i, j))
-					{
-						data = memory.at(i);
-						memory.at(i) = memory.at(j);
-						memory.at(j) = data;
-					}
-				}
-			}
-			View(memory,list);
+			num == 1 ? memory.sort(NameSort) : (num == 2 ? memory.sort(IdSort) : memory.sort(WageSort));
+			View(memory);
 			std::cout << std::endl << Blank(5) << "     ";
 			system("pause");
 		}

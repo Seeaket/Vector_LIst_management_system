@@ -1,7 +1,9 @@
 #pragma once
+#include"ListNode.h"
 
-int NameSearch(std::vector<ListMessage*>memory,int i,int j);
+bool NameSort(const ListMessage& a, const ListMessage& b);
 
-int IdSearch(std::vector<ListMessage*>memory,int i,int j);
+bool IdSort(const ListMessage& a, const ListMessage& b);
 
-int wagesSearch(std::vector<ListMessage*>memory,int i,int j);
+bool WageSort(const ListMessage& a, const ListMessage& b);
+
